@@ -12,12 +12,14 @@ def exhaustive_search_4tumblers(puzzle: CombinationProblem) -> list:
     my_attempt = CandidateSolution()
     
     # ====> insert your code below here
+    #Trying possible 4-digit combination 
     for digit1 in puzzle.value_set:
         for digit2 in puzzle.value_set:
             for digit3 in puzzle.value_set:
                 for digit4 in puzzle.value_set:
                     my_attempt.variable_values = [digit1, digit2, digit3, digit4]
                     try:
+                        # For checking the combination
                         result = puzzle.evaluate(my_attempt.variable_values)
                         if result == 1:
                             return my_attempt.variable_values
@@ -46,8 +48,6 @@ def check_sudoku_array(attempt: np.ndarray) -> int:
     
     # ====> insert your code below here
 
-
-    # use assertions to check that the array has 2 dimensions each of size 9
     assert attempt.shape == (9, 9), "Array must be 9x9"
     
     ## Remember all the examples of indexing above
@@ -67,9 +67,9 @@ def check_sudoku_array(attempt: np.ndarray) -> int:
 
     
 
-    for slice in slices:  # easiest way to iterate over list
-        if len(np.unique(slice)) == 9:  # get number of unique values in slice
-            tests_passed += 1  # increment value of tests_passed as appropriate
+    for slice in slices: 
+        if len(np.unique(slice)) == 9:  # for getting number of unique values in slice
+            tests_passed += 1 
         
     # <==== insert your code above here
     # return count of tests passed

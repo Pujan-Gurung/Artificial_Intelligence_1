@@ -27,11 +27,10 @@ class DepthFirstSearch(SingleMemberSearch):
         next_soln = CandidateSolution()
 
         # ====> insert your pseudo-code and code below here
-
-        my_index = len(self.open_list) - 1
-        next_soln = self.open_list[my_index]
-        self.open_list.pop(my_index)
-
+        if not self.open_list:
+            return None
+        
+        next_soln = self.open_list.pop()
         # <==== insert your pseudo-code and code above here
         return next_soln
 
@@ -57,13 +56,10 @@ class BreadthFirstSearch(SingleMemberSearch):
         next_soln = CandidateSolution()
 
         # ====> insert your pseudo-code and code below here
-
-        my_index = 0
-
-        next_soln = self.open_list[my_index]
-
-        self.open_list.pop(my_index)
-
+        if not self.open_list:
+            return None
+        
+        next_soln = self.open_list.pop(0)
         # <==== insert your pseudo-code and code above here
         return next_soln
 
@@ -86,20 +82,15 @@ class BestFirstSearch(SingleMemberSearch):
         next_soln = CandidateSolution()
 
         # ====> insert your pseudo-code and code below here
-
-        # IF IsEmpty(open_list) THEN
         if not self.open_list:
             return None
         
-        # bestChild <-- GetMemberWithHighestQuality(openList)
         best_index = 0
         for i in range(len(self.open_list)):
             if self.open_list[i].quality < self.open_list[best_index].quality:
                 best_index = i
-        
-        # RETURN bestChild (Best-First keeps the openlist to allow backtracking)
+                
         next_soln = self.open_list.pop(best_index)
-
         # <==== insert your pseudo-code and code above here
         return next_soln
 
@@ -122,22 +113,19 @@ class AStarSearch(SingleMemberSearch):
         next_soln = CandidateSolution()
 
         # ====> insert your pseudo-code and code below here
-
-        # IF IsEmpty(open_list) THEN
         if not self.open_list:
             return None
         
-        # bestChild <-- GetMemberWithHighestcombined(openList)
         best_index = 0
+        best_score = len(self.open_list[0].variable_values) + self.open_list[0].quality
         for i in range(len(self.open_list)):
-            combined_cost = len(self.open_list[i].variable_values) + self.open_list[i].quality
-            best_combined_cost = len(self.open_list[best_index].variable_values) + self.open_list[best_index].quality
-            if combined_cost < best_combined_cost:
+            current_score = len(self.open_list[i].variable_values) + self.open_list[i].quality
+            if current_score < best_score:
                 best_index = i
-        
-        # RETURN bestChild
+                best_score = current_score
+                
         next_soln = self.open_list.pop(best_index)
-
+        
         # <==== insert your pseudo-code and code above here
         return next_soln
 wall_colour= 0.0
@@ -146,25 +134,40 @@ hole_colour = 1.0
 def create_maze_breaks_depthfirst():
     # ====> insert your code below here
     #remember to comment out any mention of show_maze() before you submit your work
+    maze = Maze(mazefile="maze.txt")
 
+    maze.contents[3][4] = hole_colour  # Open path to trick DFS
+    maze.contents[8][4] = wall_colour  # Block DFS at the end
+
+    maze.contents[10][6] = hole_colour  # Another DFS trap
+    maze.contents[14][6] = wall_colour  # Dead-end
+    maze.contents[16][1] = hole_colour  # Dead-end
+    maze.contents[19][4] = hole_colour  # Dead-end
+
+    maze.contents[8][1] = hole_colour
+    maze.contents[12][9] = wall_colour
+    maze.contents[11][12] = wall_colour
+    maze.contents[9][2] = wall_colour
+    maze.contents[10][19] = wall_colour
+    maze.contents[18][5] = wall_colour
+    
+    
+
+    
+    # Save the maze
+    maze.save_to_txt("maze-breaks-depth.txt")
+    # <==== insert your code above here
+
+def create_maze_depth_better():
+    # ====> insert your code below here
+    #remember to comment out any mention of show_maze() before you submit your work
     
     maze = Maze(mazefile="maze.txt")
-    
-    # Place walls to create a dead-end path
-    maze.contents[1][1] = wall_colour
-    maze.contents[2][1] = wall_colour
-    maze.contents[3][1] = wall_colour
-    maze.contents[4][1] = wall_colour
-    maze.contents[5][1] = wall_colour  # Dead-end path for DFS
-    
-    # Create another path for BFS to find the goal
-    maze.contents[1][2] = hole_colour  # Alternate path for BFS
-    maze.contents[2][2] = hole_colour
-    maze.contents[3][2] = hole_colour
-    maze.contents[3][3] = hole_colour  # Goal path for BFS
-    
-    # Save the maze to a file
-    maze.save_to_txt("maze-breaks-depth.txt")
-
-
+    maze.contents[1][8] = wall_colour
+    maze.contents[9][10] = wall_colour
+    maze.contents[15][6] = wall_colour
+    maze.contents[13][2] = wall_colour
+    maze.contents[12][13] = wall_colour
+    maze.contents[2][13] = wall_colour
+    maze.save_to_txt("maze-depth-better.txt")
     # <==== insert your code above here
