@@ -134,15 +134,16 @@ hole_colour = 1.0
 def create_maze_breaks_depthfirst():
     # ====> insert your code below here
     #remember to comment out any mention of show_maze() before you submit your work
+    
     maze = Maze(mazefile="maze.txt")
 
     maze.contents[3][4] = hole_colour  # Open path to trick DFS
     maze.contents[8][4] = wall_colour  # Block DFS at the end
 
     maze.contents[10][6] = hole_colour  # Another DFS trap
-    maze.contents[14][6] = wall_colour  # Dead-end
-    maze.contents[16][1] = hole_colour  # Dead-end
-    maze.contents[19][4] = hole_colour  # Dead-end
+    maze.contents[14][6] = wall_colour  
+    maze.contents[16][1] = hole_colour 
+    maze.contents[19][4] = hole_colour
 
     maze.contents[8][1] = hole_colour
     maze.contents[12][9] = wall_colour
@@ -151,10 +152,6 @@ def create_maze_breaks_depthfirst():
     maze.contents[10][19] = wall_colour
     maze.contents[18][5] = wall_colour
     
-    
-
-    
-    # Save the maze
     maze.save_to_txt("maze-breaks-depth.txt")
     # <==== insert your code above here
 
@@ -170,4 +167,5 @@ def create_maze_depth_better():
     maze.contents[12][13] = wall_colour
     maze.contents[2][13] = wall_colour
     maze.save_to_txt("maze-depth-better.txt")
+    
     # <==== insert your code above here

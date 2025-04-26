@@ -23,40 +23,50 @@ def cluster_and_visualise(datafile_name:str, K:int, feature_names:list):
         axs: matplotlib.axes.Axes
             the axes object for the plot
     """
-    # ====> insert your code below here
-    # Read the data file
-    data = np.genfromtxt(datafile_name, delimiter=',')
+   # ====> insert your code below here
+    # get the data from file into a numpy array
+    X = np.genfromtxt(datafile_name, delimiter=',')
     
-    # Perform K-means clustering
-    kmeans = KMeans(n_clusters=K, n_init=10)
-    cluster_ids = kmeans.fit_predict(data)
+    # create a K-Means cluster model with  the specified number of clusters
+    cluster_model = KMeans(n_clusters=K, n_init=10)
+    cluster_model.fit(X)
+    cluster_ids = cluster_model.predict(X)
     
-    # Create visualization
-    num_features = data.shape[1]
-    fig, ax = plt.subplots(num_features, num_features, figsize=(12, 12))
+    # create a canvas(fig) and axes to hold your visualisation
+    num_feat = X.shape[1]
+    fig, ax = plt.subplots(num_feat, num_feat, figsize=(12, 12))
+    plt.set_cmap('viridis')
     
-    # Generate scatterplot matrix
-    for i in range(num_features):
-        for j in range(num_features):
-            if i != j:
-                # Scatter plot for different feature pairs
-                ax[i,j].scatter(data[:,j], data[:,i], c=cluster_ids, s=30, cmap='viridis')
-            else:
-                # Histogram on diagonal
-                ax[i,j].hist(data[:,i], bins=20, color='skyblue', edgecolor='black')
+    colors = plt.cm.viridis(np.linspace(0, 1, K))
+    # make the visualisation
+    for feature1 in range(num_feat):
+        ax[feature1, 0].set_ylabel(feature_names[feature1])
+        ax[0, feature1].set_xlabel(feature_names[feature1])
+        ax[0, feature1].xaxis.set_label_position('top')
+        
+        for feature2 in range(num_feat):
+            x_data = X[:, feature1]
+            y_data = X[:, feature2]
             
-            # Set axis labels
-            if i == num_features-1:
-                ax[i,j].set_xlabel(feature_names[j], fontsize=8)
-            if j == 0:
-                ax[i,j].set_ylabel(feature_names[i], fontsize=8)
+            if feature1 != feature2:
+                ax[feature1, feature2].scatter(x_data, y_data, c=cluster_ids, s=40)
+            else:
+                # Create colored histograms
+                for cluster in range(K):
+                    cluster_data = x_data[cluster_ids == cluster]
+                    ax[feature1, feature2].hist(cluster_data, bins=15, 
+                                              color=colors[cluster], 
+                                              alpha=0.7,
+                                              edgecolor='black')
+                
+    # remember to put your user name into the title as specified
+    fig.suptitle(f"Visualisation of {K} clusters by p28-gurung", fontsize=16, y=0.925)
+
+    # save it to file as specified
+    fig.savefig('myVisualisation.jpg')
+
+    # if you don't delete the line below there will be problem!
     
-    # Add title with your UWE username (REPLACE 'abc123' with your actual username)
-    fig.suptitle(f"Visualisation of {K} clusters by p28-gurung", y=1.02, fontsize=14)
+    return fig,ax
     
-    # Save visualization
-    plt.tight_layout()
-    plt.savefig('myVisualisation.jpg')
-    
-    return fig, ax
     # <==== insert your code above here
